@@ -27,21 +27,24 @@ music_album_name varchar (200) not null,
 year_of_release int check (year_of_release > 0)
 );
 
+drop table music_track;
+
 create table music_track (
 track_id serial primary key,
 track_name varchar (200) not null,
-duration int not null check (duration > 0),
+duration time without time zone not null,
 music_album_id int references music_album (music_album_id)
 );
 
+alter table music_track
+alter column duration type time without time zone
 
 drop table album_track;
 
 create table album_track (
-music_album_id int not null references music_album (music_album_id),
-track_id int not null,
+track_id int not null references music_track (track_id),
 musician_id int references musician (musician_id),
-primary key (music_album_id, track_id)
+primary key (track_id, musician_id)
 );
 
 create table track_collection (
@@ -50,7 +53,6 @@ track_id int not null references music_track (track_id),
 primary key (music_collection_id, track_id)
 );
 
-drop table music_collection;
 
 create table music_collection (
 music_collection_id serial primary key,
